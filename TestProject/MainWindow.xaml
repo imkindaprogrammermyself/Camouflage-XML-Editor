@@ -1,0 +1,272 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestProject"
+        xmlns:ColorPickerWPF="clr-namespace:ColorPickerWPF;assembly=ColorPickerWPF" x:Class="TestProject.MainWindow"
+        mc:Ignorable="d"
+        Title="Camouflage Color Scheme Editor" Height="331.667" Width="537.333">
+    <Window.Resources>
+        <Style x:Key="TransparentGridBackground" TargetType="{x:Type Grid}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <DrawingBrush Viewport="0,0,16,16" ViewportUnits="Absolute" Stretch="None" TileMode="Tile">
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <GeometryDrawing Brush="LightGray">
+                                    <GeometryDrawing.Geometry>
+                                        <GeometryGroup>
+                                            <RectangleGeometry Rect="0,0,8,8"/>
+                                            <RectangleGeometry Rect="8,8,8,8"/>
+                                        </GeometryGroup>
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="White">
+                                    <GeometryDrawing.Geometry>
+                                        <GeometryGroup>
+                                            <RectangleGeometry Rect="8,0,8,8"/>
+                                            <RectangleGeometry Rect="0,8,8,8"/>
+                                        </GeometryGroup>
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Click="OpenCamouflageFile"/>
+                <MenuItem Header="Save" Click="SaveCamouflageFile"/>
+                <MenuItem Header="Exit" Click="CloseProgram"/>
+            </MenuItem>
+        </Menu>
+        <TabControl x:Name="tabControlMenu" DockPanel.Dock="Top">
+            <TabItem Header="Camouflage" x:Name="tabCamouflage">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="85"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Grid.Row="0" Content="Ship:" Margin="0,0,0,10" HorizontalContentAlignment="Right" VerticalAlignment="Top"/>
+                        <Label Grid.Column="0" Grid.Row="1" Content="Camouflage:" Margin="0,0,0,10" HorizontalContentAlignment="Right" VerticalAlignment="Top"/>
+                        <Label Grid.Column="0" Grid.Row="2" Content="Scheme:" Margin="0,0,0,10" HorizontalContentAlignment="Right" VerticalAlignment="Top"/>
+                        <Label Grid.Column="0" Grid.Row="3" Content="Texture:" HorizontalContentAlignment="Right" VerticalAlignment="Top"/>
+                        <ComboBox Name="CbShip" Grid.Column="1" Grid.Row="0" Margin="0,0,0,10" Padding="5" VerticalAlignment="Top">
+                            <ComboBoxItem>
+                                <TextBlock>PRSB505_Oktyabrskaya_Revolutsiya</TextBlock>
+                            </ComboBoxItem>
+                        </ComboBox>
+                        <ComboBox Name="CbCamouflage" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10" Padding="5" VerticalAlignment="Top"/>
+                        <ComboBox Name="CbScheme" Grid.Column="1" Grid.Row="2" Margin="0,0,0,10" Padding="5" VerticalAlignment="Top"/>
+                        <ListBox Name="LbTexture" Grid.Column="1" Grid.Row="3"/>
+                    </Grid>
+                    <Grid x:Name="GridColorMenu" Grid.Column="1" Margin="5,0,0,0" Style="{StaticResource TransparentGridBackground}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Rectangle x:Name="RectDisplayBlack" Grid.Row="0" Grid.Column="0" Fill="#80000000" Tag="1"/>
+                        <Rectangle x:Name="RectDisplayRed" Grid.Row="0" Grid.Column="1" Fill="#80FF0000" Tag="2"/>
+                        <Rectangle x:Name="RectDisplayGreen" Grid.Row="1" Grid.Column="0" Fill="#8000FF00" Tag="3"/>
+                        <Rectangle x:Name="RectDisplayBlue" Grid.Row="1" Grid.Column="1" Fill="#800000FF" Tag="4"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Color0" x:Name="tabColor0">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="Texture Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="1" Content="Current Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="2" Content="Previous Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="3" Content="Default Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Grid Grid.Column="1" Grid.Row="0" Margin="5,0" Grid.RowSpan="4" Style="{StaticResource TransparentGridBackground}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Rectangle Grid.Row="0" Fill="#88000000" Margin="0"/>
+                        <Rectangle Grid.Row="1" Fill="Gray" Margin="0"/>
+                        <Rectangle Grid.Row="2" Fill="Gray" Margin="0"/>
+                        <Rectangle Grid.Row="3" Fill="Gray" Margin="0"/>
+                    </Grid>
+                    <Button Grid.Column="2" Grid.Row="1" Content="Modify" Margin="5"/>
+                    <Button Grid.Column="2" Grid.Row="2" Content="Apply" Margin="5"/>
+                    <Button Grid.Column="2" Grid.Row="3" Content="Apply" Margin="5"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Color1" x:Name="tabColor1">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="Texture Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="1" Content="Current Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="2" Content="Previous Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="3" Content="Default Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Grid Grid.Column="1" Grid.Row="0" Margin="5,0" Grid.RowSpan="4" Style="{StaticResource TransparentGridBackground}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Rectangle Grid.Row="0" Fill="#88FF0000" Margin="0"/>
+                        <Rectangle Grid.Row="1" Fill="Gray" Margin="0"/>
+                        <Rectangle Grid.Row="2" Fill="Gray" Margin="0"/>
+                        <Rectangle Grid.Row="3" Fill="Gray" Margin="0"/>
+                    </Grid>
+                    <Button Grid.Column="2" Grid.Row="1" Content="Modify" Margin="5"/>
+                    <Button Grid.Column="2" Grid.Row="2" Content="Apply" Margin="5"/>
+                    <Button Grid.Column="2" Grid.Row="3" Content="Apply" Margin="5"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Color2" x:Name="tabColor2">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="Texture Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="1" Content="Current Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="2" Content="Previous Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="3" Content="Default Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Grid Grid.Column="1" Grid.Row="0" Margin="5,0" Grid.RowSpan="4" Style="{StaticResource TransparentGridBackground}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Rectangle Grid.Row="0" Fill="#8800FF00" Margin="0"/>
+                        <Rectangle Grid.Row="1" Fill="Gray" Margin="0"/>
+                        <Rectangle Grid.Row="2" Fill="Gray" Margin="0"/>
+                        <Rectangle Grid.Row="3" Fill="Gray" Margin="0"/>
+                    </Grid>
+                    <Button Grid.Column="2" Grid.Row="1" Content="Modify" Margin="5"/>
+                    <Button Grid.Column="2" Grid.Row="2" Content="Apply" Margin="5"/>
+                    <Button Grid.Column="2" Grid.Row="3" Content="Apply" Margin="5"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Color3" x:Name="tabColor3">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="Texture Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="1" Content="Current Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="2" Content="Previous Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="3" Content="Default Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Grid Grid.Column="1" Grid.Row="0" Margin="5,0" Grid.RowSpan="4" Style="{StaticResource TransparentGridBackground}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Rectangle Grid.Row="0" Fill="#880000FF" Margin="0"/>
+                        <Rectangle Grid.Row="1" Fill="Gray" Margin="0"/>
+                        <Rectangle Grid.Row="2" Fill="Gray" Margin="0"/>
+                        <Rectangle Grid.Row="3" Fill="Gray" Margin="0"/>
+                    </Grid>
+                    <Button Grid.Column="2" Grid.Row="1" Content="Modify" Margin="5"/>
+                    <Button Grid.Column="2" Grid.Row="2" Content="Apply" Margin="5"/>
+                    <Button Grid.Column="2" Grid.Row="3" Content="Apply" Margin="5"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="ColorUI" x:Name="tabColorUi">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="Texture Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="1" Content="Current Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="2" Content="Previous Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Label Grid.Column="0" Grid.Row="3" Content="Default Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <Grid Grid.Column="1" Grid.Row="0" Margin="5,0" Grid.RowSpan="4" Style="{StaticResource TransparentGridBackground}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Rectangle Grid.Row="0" Fill="#88808080" Margin="0"/>
+                        <Rectangle Grid.Row="1" Fill="Gray" Margin="0"/>
+                        <Rectangle Grid.Row="2" Fill="Gray" Margin="0"/>
+                        <Rectangle Grid.Row="3" Fill="Gray" Margin="0"/>
+                    </Grid>
+                    <Button Grid.Column="2" Grid.Row="1" Content="Modify" Margin="5"/>
+                    <Button Grid.Column="2" Grid.Row="2" Content="Apply" Margin="5"/>
+                    <Button Grid.Column="2" Grid.Row="3" Content="Apply" Margin="5"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>
