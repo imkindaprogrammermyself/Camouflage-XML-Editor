@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using ColorPickerWPF;
+using ColorPickerWPF.Code;
 
 namespace TestProject
 {
@@ -22,15 +24,14 @@ namespace TestProject
         private ColorScheme scheme;
         private List<Grid> tabGrids;
         private List<Grid> colorGrids;
-        private List<Rectangle> rectCurrents;
-        private List<Rectangle> rectPrevious;
-        private List<Rectangle> rectDefaults;
         private List<ComboBox> cbs;
+        private Dictionary<string, Rectangle[]> dictCurrentsPreviousDefaults;
         public MainWindow()
         {
             InitializeComponent();
             InitializeControlLists();
             EnableTabGrids(false);
+            RegisterButtonEvents();
         }
 
         private void InitializeControlLists()
@@ -52,36 +53,61 @@ namespace TestProject
                 GridColor3,
                 GridColorUi
             };
-            rectCurrents = new List<Rectangle>
-            {
-                RectCurrent0,
-                RectCurrent1,
-                RectCurrent2,
-                RectCurrent3,
-                RectCurrentUi
-            };
-            rectPrevious = new List<Rectangle>
-            {
-                RectPrevious0,
-                RectPrevious1,
-                RectPrevious2,
-                RectPrevious3,
-                RectPreviousUi
-            };
-            rectDefaults = new List<Rectangle>
-            {
-                RectDefault0,
-                RectDefault1,
-                RectDefault2,
-                RectDefault3,
-                RectDefaultUi
-            };
             cbs = new List<ComboBox>
             {
                 CbShip,
                 CbCamouflage,
                 CbScheme
             };
+            dictCurrentsPreviousDefaults = new Dictionary<string, Rectangle[]>
+            {
+                { "0", new Rectangle[]{RectCurrent0,RectPrevious0,RectDefault0} },
+                { "1", new Rectangle[]{RectCurrent1,RectPrevious1,RectDefault1} },
+                { "2", new Rectangle[]{RectCurrent2,RectPrevious2,RectDefault2} },
+                { "3", new Rectangle[]{RectCurrent3,RectPrevious3,RectDefault3} },
+                { "ui", new Rectangle[]{RectCurrentUi,RectPreviousUi,RectDefaultUi} }
+            };
+        }
+
+        private void ButtonEventHandler(object sender, RoutedEventArgs e)
+        {
+            string[] tag = ((Button)sender).Tag.ToString().Split('_');
+            string cmd = tag[0];
+            string num = tag[1];
+            if (cmd == "current")
+            {
+                var a = ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color;
+                ColorPickerWindow window = new ColorPickerWindow();
+                window.picker.SetColor(a);
+                if (window.ShowDialog() == true)
+                {
+                    dictCurrentsPreviousDefaults[num][1].Fill = new SolidColorBrush(a);
+                    dictCurrentsPreviousDefaults[num][0].Fill = new SolidColorBrush(window.picker.Color);
+                }
+            }
+            else if (cmd == "previous")
+            {
+                dictCurrentsPreviousDefaults[num][0].Fill = dictCurrentsPreviousDefaults[num][1].Fill;
+            }
+            else if (cmd == "default")
+            {
+                dictCurrentsPreviousDefaults[num][0].Fill = dictCurrentsPreviousDefaults[num][2].Fill;
+            }
+            SetRectangleFillGradient(RectSchemeDisplay,
+                    GetLinearGradientBrush(
+                    ((SolidColorBrush)RectCurrent0.Fill).Color,
+                    ((SolidColorBrush)RectCurrent1.Fill).Color,
+                    ((SolidColorBrush)RectCurrent2.Fill).Color,
+                    ((SolidColorBrush)RectCurrent3.Fill).Color
+                    ));
+        }
+
+        private void RegisterButtonEvents()
+        {
+            colorGrids.ForEach(cg =>
+            {
+                cg.Children.OfType<Button>().ToList().ForEach(btn => btn.Click += ButtonEventHandler);
+            });
         }
 
         private void EnableTabGrids(bool en)
@@ -114,21 +140,6 @@ namespace TestProject
                     miSave.IsEnabled = false;
                 }
             }
-        }
-
-        private void ClearAll()
-        {
-            cbs.ForEach(cb => cb.ItemsSource = null);
-            LbTexture.ItemsSource = null;
-            SetRectanglesFill(rectCurrents, Color.FromArgb(0, 0, 0, 0));
-            SetRectanglesFill(rectPrevious, Color.FromArgb(0, 0, 0, 0));
-            SetRectanglesFill(rectDefaults, Color.FromArgb(0, 0, 0, 0));
-            SetRectangleFillGradient(RectSchemeDisplay,
-                GetLinearGradientBrush(Color.FromArgb(0, 0, 0, 0),
-                    Color.FromArgb(0, 0, 0, 0),
-                    Color.FromArgb(0, 0, 0, 0),
-                    Color.FromArgb(0, 0, 0, 0)));
-            EnableTabGrids(false);
         }
 
         private void EnableGrid(bool en, Grid grid = null, List<Grid> grids = null)
@@ -182,6 +193,7 @@ namespace TestProject
             var selectedItem = (string)((ComboBox)sender).SelectedItem;
             if (selectedItem != null)
             {
+                SetRectanglesFill(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList(), Color.FromArgb(0, 0, 0, 0));
                 Binding listBinding = new Binding() { Source = camos.AssociatedWith(selectedItem) };
                 CbCamouflage.DisplayMemberPath = "Value";
                 CbCamouflage.SelectedValuePath = "Key";
@@ -197,17 +209,10 @@ namespace TestProject
                 var kvp = (KeyValuePair<int, string>)((ComboBox)sender).SelectedItem;
                 if (!camos.AssociatedColorScheme(kvp.Key).Any())
                 {
-                    SetRectanglesFill(rectDefaults, Color.FromArgb(0, 0, 0, 0));
-                    SetRectanglesFill(rectCurrents, Color.FromArgb(0, 0, 0, 0));
-                    SetRectanglesFill(rectPrevious, Color.FromArgb(0, 0, 0, 0));
                     EnableGrid(false, grids: colorGrids);
                     CbScheme.ItemsSource = null;
                     CbScheme.IsEnabled = false;
-                    SetRectangleFillGradient(RectSchemeDisplay,
-                    GetLinearGradientBrush(Color.FromArgb(0, 0, 0, 0),
-                    Color.FromArgb(0, 0, 0, 0),
-                    Color.FromArgb(0, 0, 0, 0),
-                    Color.FromArgb(0, 0, 0, 0)));
+                    ClearColors();
                 }
                 else
                 {
@@ -225,6 +230,7 @@ namespace TestProject
             var selectedItem = (string)((ComboBox)sender).SelectedItem;
             if (selectedItem != null)
             {
+                SetRectanglesFill(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList(), Color.FromArgb(0, 0, 0, 0));
                 scheme = schemes.GetScheme(selectedItem);
                 SetRectangleFillGradient(RectSchemeDisplay,
                     GetLinearGradientBrush(scheme.Black, scheme.Red, scheme.Green, scheme.Blue));
@@ -251,6 +257,31 @@ namespace TestProject
             }
         }
 
+        private void ClearColors()
+        {
+            var c = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[0]).ToList();
+            var p = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList();
+            var d = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[2]).ToList();
+            SetRectanglesFill(c, Color.FromArgb(0, 0, 0, 0));
+            SetRectanglesFill(p, Color.FromArgb(0, 0, 0, 0));
+            SetRectanglesFill(d, Color.FromArgb(0, 0, 0, 0));
+            SetRectangleFillGradient(RectSchemeDisplay,
+            GetLinearGradientBrush(
+                Color.FromArgb(0, 0, 0, 0),
+                Color.FromArgb(0, 0, 0, 0),
+                Color.FromArgb(0, 0, 0, 0),
+                Color.FromArgb(0, 0, 0, 0)
+                ));
+        }
+
+        private void ClearAll()
+        {
+            cbs.ForEach(cb => cb.ItemsSource = null);
+            LbTexture.ItemsSource = null;
+            ClearColors();
+            EnableTabGrids(false);
+        }
+
         private LinearGradientBrush GetLinearGradientBrush(Color color0, Color color1, Color color2, Color color3)
         {
             var gsc = new GradientStopCollection
@@ -268,6 +299,11 @@ namespace TestProject
                 EndPoint = new Point(0, 1),
                 GradientStops = gsc
             };
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

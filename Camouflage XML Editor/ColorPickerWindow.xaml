@@ -1,0 +1,17 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestProject"
+        xmlns:ColorPickerWPF="clr-namespace:ColorPickerWPF;assembly=ColorPickerWPF" x:Class="TestProject.ColorPickerWindow"
+        mc:Ignorable="d" SizeToContent="WidthAndHeight" Margin="0" WindowStyle="ToolWindow" FontSize="14" Width="560" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ColorPickerWPF:ColorPickerControl x:Name="picker" Grid.Row="0" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top"/>
+        <Button Content="OK" Grid.Row="1" Margin="10,0,10,10" VerticalAlignment="Top" Padding="0,10" Click="Button_Click"/>
+    </Grid>
+</Window>

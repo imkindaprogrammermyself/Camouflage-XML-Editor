@@ -12,31 +12,33 @@ namespace TestProject
         private XmlDocument doc;
         public bool Load(string path)
         {
-            Assembly myAssembly = Assembly.GetExecutingAssembly();
-            Stream schemaStream = myAssembly.GetManifestResourceStream("TestProject.camouflages.xsd");
-            XmlSchema schema = XmlSchema.Read(schemaStream, null);
-
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.Schemas.Add(schema);
-            settings.ValidationType = ValidationType.Schema;
-            settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
-            settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;
-            settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
-
-            XmlReader reader = XmlReader.Create(path, settings);
-            doc = new XmlDocument();
-            try
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            using (Stream schemaStream = assembly.GetManifestResourceStream("TestProject.camouflages.xsd"))
             {
-                doc.Load(reader);
-                return true;
-            }
-            catch (XmlSchemaValidationException)
-            {
-                return false;
-            }
-            catch (XmlException)
-            {
-                return false;
+                try
+                {
+                    XmlSchema schema = XmlSchema.Read(schemaStream, null);
+                    XmlReaderSettings settings = new XmlReaderSettings();
+                    settings.Schemas.Add(schema);
+                    settings.ValidationType = ValidationType.Schema;
+                    settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
+                    settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;
+                    settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
+                    using (XmlReader reader = XmlReader.Create(path, settings))
+                    {
+                        doc = new XmlDocument();
+                        doc.Load(reader);
+                        return true;
+                    }
+                }
+                catch (XmlException)
+                {
+                    return false;
+                }
+                catch (XmlSchemaValidationException)
+                {
+                    return false;
+                }
             }
         }
 
