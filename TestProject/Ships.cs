@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace TestProject
@@ -35,15 +32,6 @@ namespace TestProject
             else
             {
                 return new List<string>();
-            }
-        }
-
-        public void PrintShipGroups()
-        {
-            foreach (KeyValuePair<string, List<string>> kv in shipGroups)
-            {
-                Console.WriteLine(kv.Key);
-                kv.Value.ForEach(x => Console.WriteLine("\t{0}", x));
             }
         }
 

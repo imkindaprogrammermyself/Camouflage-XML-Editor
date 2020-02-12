@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Media;
 using System.Xml;
@@ -49,7 +48,7 @@ namespace TestProject
     class ColorScheme
     {
         private readonly XmlNode scheme;
-        
+
         public ColorScheme(XmlNode scheme)
         {
             this.scheme = scheme;
@@ -75,7 +74,7 @@ namespace TestProject
                 var final = Color.FromArgb(c[3], c[0], c[1], c[2]);
                 return final;
             }
-            return Color.FromArgb(0,0,0,0);
+            return Color.FromArgb(0, 0, 0, 0);
         }
 
         private void ModifyColor(string index, Color color)

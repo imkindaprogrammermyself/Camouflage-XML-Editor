@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="data">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ShipGroups">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="shipGroup">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="name" type="xs:string" />
+                    <xs:element name="ships" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ColorSchemes">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="colorScheme">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="name" type="xs:string" />
+                    <xs:element name="color0" type="xs:string" />
+                    <xs:element name="color1" type="xs:string" />
+                    <xs:element name="color2" type="xs:string" />
+                    <xs:element name="color3" type="xs:string" />
+                    <xs:element minOccurs="0" name="colorUI" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Camouflages">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="camouflage">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:choice maxOccurs="unbounded">
+                      <xs:element name="annotation" type="xs:string" />
+                      <xs:element name="name" type="xs:string" />
+                      <xs:element name="shipGroups" type="xs:string" />
+                      <xs:element name="tiled" type="xs:boolean" />
+                      <xs:element maxOccurs="unbounded" name="targetShip" type="xs:string" />
+                      <xs:element name="UV">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:choice maxOccurs="unbounded">
+                              <xs:element name="DeckHouse" type="xs:string" />
+                              <xs:element name="Tile" type="xs:string" />
+                              <xs:element name="Gun" type="xs:string" />
+                              <xs:element name="Director" type="xs:string" />
+                              <xs:element name="Plane" type="xs:string" />
+                              <xs:element name="Float" type="xs:string" />
+                              <xs:element name="Misc" type="xs:string" />
+                              <xs:element name="Bulge" type="xs:string" />
+                              <xs:element name="Wire" type="xs:string" />
+                            </xs:choice>
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="Textures">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:choice maxOccurs="unbounded">
+                              <xs:element name="DeckHouse" type="xs:string" />
+                              <xs:element name="DeckHouse_mgn">
+                                <xs:complexType mixed="true">
+                                  <xs:sequence>
+                                    <xs:element name="Influence_m" type="xs:decimal" />
+                                    <xs:element name="Influence_g" type="xs:decimal" />
+                                    <xs:element name="Influence_n" type="xs:decimal" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element name="Hull" type="xs:string" />
+                              <xs:element name="Hull_mgn">
+                                <xs:complexType mixed="true">
+                                  <xs:sequence>
+                                    <xs:element name="Influence_m" type="xs:decimal" />
+                                    <xs:element name="Influence_g" type="xs:decimal" />
+                                    <xs:element name="Influence_n" type="xs:decimal" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element name="Gun" type="xs:string" />
+                              <xs:element name="Gun_mgn">
+                                <xs:complexType mixed="true">
+                                  <xs:sequence>
+                                    <xs:element name="Influence_m" type="xs:decimal" />
+                                    <xs:element name="Influence_g" type="xs:decimal" />
+                                    <xs:element name="Influence_n" type="xs:decimal" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element name="Director" type="xs:string" />
+                              <xs:element name="Director_mgn">
+                                <xs:complexType mixed="true">
+                                  <xs:sequence>
+                                    <xs:element name="Influence_m" type="xs:decimal" />
+                                    <xs:element name="Influence_g" type="xs:decimal" />
+                                    <xs:element name="Influence_n" type="xs:decimal" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element name="Plane" type="xs:string" />
+                              <xs:element name="Plane_mgn">
+                                <xs:complexType mixed="true">
+                                  <xs:sequence>
+                                    <xs:element name="Influence_m" type="xs:decimal" />
+                                    <xs:element name="Influence_g" type="xs:decimal" />
+                                    <xs:element name="Influence_n" type="xs:decimal" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element name="Float" type="xs:string" />
+                              <xs:element name="Float_mgn">
+                                <xs:complexType mixed="true">
+                                  <xs:sequence>
+                                    <xs:element name="Influence_m" type="xs:decimal" />
+                                    <xs:element name="Influence_g" type="xs:decimal" />
+                                    <xs:element name="Influence_n" type="xs:decimal" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element name="Misc" type="xs:string" />
+                              <xs:element name="Misc_mgn">
+                                <xs:complexType mixed="true">
+                                  <xs:sequence>
+                                    <xs:element name="Influence_m" type="xs:decimal" />
+                                    <xs:element name="Influence_g" type="xs:decimal" />
+                                    <xs:element name="Influence_n" type="xs:decimal" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element name="Bulge" type="xs:string" />
+                              <xs:element name="Bulge_mgn">
+                                <xs:complexType mixed="true">
+                                  <xs:sequence>
+                                    <xs:element name="Influence_m" type="xs:decimal" />
+                                    <xs:element name="Influence_g" type="xs:decimal" />
+                                    <xs:element name="Influence_n" type="xs:decimal" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element name="Wire" type="xs:string" />
+                              <xs:element name="Wire_mgn">
+                                <xs:complexType mixed="true">
+                                  <xs:sequence>
+                                    <xs:element name="Influence_m" type="xs:decimal" />
+                                    <xs:element name="Influence_g" type="xs:decimal" />
+                                    <xs:element name="Influence_n" type="xs:decimal" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element name="Tile" type="xs:string" />
+                            </xs:choice>
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element maxOccurs="unbounded" name="colorSchemes" type="xs:string" />
+                    </xs:choice>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TestProject"
         xmlns:ColorPickerWPF="clr-namespace:ColorPickerWPF;assembly=ColorPickerWPF" x:Class="TestProject.MainWindow"
         mc:Ignorable="d"
-        Title="Camouflage Color Scheme Editor" Height="331.667" Width="800" FontSize="16" ResizeMode="NoResize">
+        Title="Camouflage Color Scheme Editor" Height="331.667" MinHeight="331.667" Width="628.3" MinWidth="628.3" FontSize="14" Icon="out.png">
     <Window.Resources>
         <Style x:Key="TransparentGridBackground" TargetType="{x:Type Grid}">
             <Setter Property="Background">
@@ -66,52 +66,41 @@
         </Style>
     </Window.Resources>
     <DockPanel>
-        <Menu DockPanel.Dock="Top" FontSize="16" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}">
-            <MenuItem Header="File">
+        <Menu DockPanel.Dock="Top" FontSize="14" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}">
+            <MenuItem Header="File" HorizontalAlignment="Left">
                 <MenuItem Header="Open" Click="OpenCamouflageFile"/>
-                <MenuItem Header="Save" Click="SaveCamouflageFile"/>
+                <MenuItem x:Name="miSave" Header="Save" Click="SaveCamouflageFile" IsEnabled="False"/>
+                <Separator/>
                 <MenuItem Header="Exit" Click="CloseProgram"/>
+            </MenuItem>
+            <MenuItem Header="Help" HorizontalAlignment="Left">
+                <MenuItem Header="About"/>
             </MenuItem>
         </Menu>
         <TabControl x:Name="tabControlMenu" DockPanel.Dock="Top">
             <TabItem Header="Camouflage" x:Name="tabCamouflage">
                 <Grid x:Name="GridCamouflage" Margin="10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="250" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="48"/>
-                            <RowDefinition Height="48"/>
-                            <RowDefinition Height="48"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Column="0" Grid.Row="0" Content="Ship:" Margin="0,0,0,10" HorizontalContentAlignment="Right" VerticalAlignment="Top"/>
-                        <Label Grid.Column="0" Grid.Row="1" Content="Camouflage:" Margin="0,0,0,10" HorizontalContentAlignment="Right" VerticalAlignment="Top"/>
-                        <Label Grid.Column="0" Grid.Row="2" Content="Scheme:" Margin="0,0,0,10" HorizontalContentAlignment="Right" VerticalAlignment="Top"/>
-                        <Label Grid.Column="0" Grid.Row="3" Content="Texture:" HorizontalContentAlignment="Right" VerticalAlignment="Top"/>
-                        <ComboBox Name="CbShip" Grid.Column="1" Grid.Row="0" Margin="0,0,0,10" Padding="5" VerticalAlignment="Top" SelectionChanged="CbShip_SelectionChanged"/>
-                        <ComboBox Name="CbCamouflage" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10" Padding="5" VerticalAlignment="Top" SelectionChanged="CbCamouflage_SelectionChanged"/>
-                        <ComboBox Name="CbScheme" Grid.Column="1" Grid.Row="2" Margin="0,0,0,10" Padding="5" VerticalAlignment="Top" SelectionChanged="CbScheme_SelectionChanged"/>
-                        <ListBox Name="LbTexture" Grid.Column="1" Grid.Row="3"/>
-                    </Grid>
-                    <Grid x:Name="GridColorMenu" Grid.Column="1" Margin="5,0,0,0" Style="{StaticResource TransparentGridBackground}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Rectangle x:Name="RectDisplay0" Grid.Row="0" Fill="#80000000" Tag="1"/>
-                        <Rectangle x:Name="RectDisplay1" Grid.Row="1" Fill="#80FF0000" Tag="2"/>
-                        <Rectangle x:Name="RectDisplay2" Grid.Row="2" Fill="#8000FF00" Tag="3"/>
-                        <Rectangle x:Name="RectDisplay3" Grid.Row="3" Fill="#800000FF" Tag="4"/>
-                    </Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="100"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="Ship:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <Label Grid.Column="0" Grid.Row="1" Content="Camouflage:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <Label Grid.Column="0" Grid.Row="2" Content="Color Scheme:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <Label Grid.Column="0" Grid.Row="3" Content="Texture:" HorizontalAlignment="Right"/>
+                    <ComboBox Name="CbShip" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" SelectionChanged="CbShip_SelectionChanged"/>
+                    <ComboBox Name="CbCamouflage" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" SelectionChanged="CbCamouflage_SelectionChanged"/>
+                    <ComboBox Name="CbScheme" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" SelectionChanged="CbScheme_SelectionChanged"/>
+                    <ListBox Name="LbTexture" Grid.Column="1" Grid.Row="3"/>
+                    <Rectangle Grid.Column="2" Grid.RowSpan="4" Style="{StaticResource ResourceKey=RectBackground}" Margin="5,0,0,0"/>
+                    <Rectangle Name="RectSchemeDisplay" Grid.Column="2" Grid.RowSpan="4" Margin="5,0,0,0"/>
                 </Grid>
             </TabItem>
 
@@ -142,7 +131,7 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="Color1" x:Name="RectCurrentRed">
+            <TabItem Header="Color1" x:Name="tabColor1">
                 <Grid x:Name="GridColor1" Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="122"/>

@@ -1,20 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
+using System.Security;
 using System.Xml;
+using System.Xml.Schema;
 
 namespace TestProject
 {
     class Loader
     {
-        XmlDocument doc;
-        public Loader(string path)
+        private XmlDocument doc;
+        public bool Load(string path)
         {
+            Assembly myAssembly = Assembly.GetExecutingAssembly();
+            Stream schemaStream = myAssembly.GetManifestResourceStream("TestProject.camouflages.xsd");
+            XmlSchema schema = XmlSchema.Read(schemaStream, null);
+
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.Schemas.Add(schema);
+            settings.ValidationType = ValidationType.Schema;
+            settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
+            settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;
+            settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
+
+            XmlReader reader = XmlReader.Create(path, settings);
             doc = new XmlDocument();
-            doc.Load(path);
+            try
+            {
+                doc.Load(reader);
+                return true;
+            }
+            catch (XmlSchemaValidationException)
+            {
+                return false;
+            }
+            catch (XmlException)
+            {
+                return false;
+            }
         }
 
         public XmlNodeList ShipGroup
