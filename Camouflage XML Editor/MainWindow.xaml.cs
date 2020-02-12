@@ -22,7 +22,6 @@ namespace CamouflageXmlEditor
         private Camouflages camos;
         private Schemes schemes;
         private ColorScheme scheme;
-        private List<Grid> tabGrids;
         private List<Grid> colorGrids;
         private List<ComboBox> cbs;
         private Dictionary<string, Rectangle[]> dictCurrentsPreviousDefaults;
@@ -36,15 +35,6 @@ namespace CamouflageXmlEditor
 
         private void InitializeControlLists()
         {
-            tabGrids = new List<Grid>
-            {
-                GridCamouflage,
-                GridColor0,
-                GridColor1,
-                GridColor2,
-                GridColor3,
-                GridColorUi
-            };
             colorGrids = new List<Grid>
             {
                 GridColor0,
@@ -83,38 +73,19 @@ namespace CamouflageXmlEditor
                 {
                     dictCurrentsPreviousDefaults[num][1].Fill = new SolidColorBrush(a);
                     dictCurrentsPreviousDefaults[num][0].Fill = new SolidColorBrush(window.picker.Color);
-                    switch (num)
-                    {
-                        case "0":
-                            {
-                                scheme.Black = window.picker.Color;
-                                break;
-                            }
-                        case "1":
-                            {
-                                scheme.Red = window.picker.Color;
-                                break;
-                            }
-                        case "2":
-                            {
-                                scheme.Green = window.picker.Color;
-                                break;
-                            }
-                        case "3":
-                            {
-                                scheme.Blue = window.picker.Color;
-                                break;
-                            }
-                    }
+                    SetSchemeColor(num, window.picker.Color);
                 }
             }
             else if (cmd == "previous")
             {
                 dictCurrentsPreviousDefaults[num][0].Fill = dictCurrentsPreviousDefaults[num][1].Fill;
+                SetSchemeColor(num, ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color);
+
             }
             else if (cmd == "default")
             {
                 dictCurrentsPreviousDefaults[num][0].Fill = dictCurrentsPreviousDefaults[num][2].Fill;
+                SetSchemeColor(num, ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color);
             }
             SetRectangleFillGradient(RectSchemeDisplay,
                     GetLinearGradientBrush(
@@ -123,6 +94,38 @@ namespace CamouflageXmlEditor
                     ((SolidColorBrush)RectCurrent2.Fill).Color,
                     ((SolidColorBrush)RectCurrent3.Fill).Color
                     ));
+        }
+
+        private void SetSchemeColor(string num, Color color)
+        {
+            switch (num)
+            {
+                case "0":
+                    {
+                        scheme.Black = color;
+                        break;
+                    }
+                case "1":
+                    {
+                        scheme.Red = color;
+                        break;
+                    }
+                case "2":
+                    {
+                        scheme.Green = color;
+                        break;
+                    }
+                case "3":
+                    {
+                        scheme.Blue = color;
+                        break;
+                    }
+                case "ui":
+                    {
+                        scheme.Ui = color;
+                        break;
+                    }
+            }
         }
 
         private void RegisterButtonEvents()
@@ -135,7 +138,8 @@ namespace CamouflageXmlEditor
 
         private void EnableTabGrids(bool en)
         {
-            tabGrids.ForEach(tg => tg.IsEnabled = en);
+            colorGrids.ForEach(tg => tg.IsEnabled = en);
+            GridCamouflage.IsEnabled = en;
         }
 
         private void OpenCamouflageFile(object sender, RoutedEventArgs e)
@@ -197,7 +201,7 @@ namespace CamouflageXmlEditor
 
         private void SaveCamouflageFile(object sender, RoutedEventArgs e)
         {
-            EnableGrid(false, GridCamouflage);
+            
         }
 
         private void CloseProgram(object sender, RoutedEventArgs e)
