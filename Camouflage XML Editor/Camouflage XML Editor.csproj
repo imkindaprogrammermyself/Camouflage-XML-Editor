@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4BEF307D-3E18-4899-BF44-1AF156E5DE68}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TestProject</RootNamespace>
+    <RootNamespace>CamouflageXmlEditor</RootNamespace>
     <AssemblyName>Camouflage XML Editor</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

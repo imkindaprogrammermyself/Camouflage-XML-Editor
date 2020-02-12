@@ -5,7 +5,7 @@ using System.Security;
 using System.Xml;
 using System.Xml.Schema;
 
-namespace TestProject
+namespace CamouflageXmlEditor
 {
     class Loader
     {
@@ -13,7 +13,7 @@ namespace TestProject
         public bool Load(string path)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            using (Stream schemaStream = assembly.GetManifestResourceStream("TestProject.camouflages.xsd"))
+            using (Stream schemaStream = assembly.GetManifestResourceStream("CamouflageXmlEditor.camouflages.xsd"))
             {
                 try
                 {

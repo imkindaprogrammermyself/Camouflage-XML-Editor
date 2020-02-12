@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace TestProject
+namespace CamouflageXmlEditor
 {
     /// <summary>
     /// Interaction logic for Window1.xaml

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Media;
 using System.Xml;
 
-namespace TestProject
+namespace CamouflageXmlEditor
 {
     enum SchemeColor
     {

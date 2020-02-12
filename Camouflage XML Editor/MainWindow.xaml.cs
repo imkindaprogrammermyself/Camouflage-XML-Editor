@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 using ColorPickerWPF;
 using ColorPickerWPF.Code;
 
-namespace TestProject
+namespace CamouflageXmlEditor
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -83,6 +83,29 @@ namespace TestProject
                 {
                     dictCurrentsPreviousDefaults[num][1].Fill = new SolidColorBrush(a);
                     dictCurrentsPreviousDefaults[num][0].Fill = new SolidColorBrush(window.picker.Color);
+                    switch (num)
+                    {
+                        case "0":
+                            {
+                                scheme.Black = window.picker.Color;
+                                break;
+                            }
+                        case "1":
+                            {
+                                scheme.Red = window.picker.Color;
+                                break;
+                            }
+                        case "2":
+                            {
+                                scheme.Green = window.picker.Color;
+                                break;
+                            }
+                        case "3":
+                            {
+                                scheme.Blue = window.picker.Color;
+                                break;
+                            }
+                    }
                 }
             }
             else if (cmd == "previous")

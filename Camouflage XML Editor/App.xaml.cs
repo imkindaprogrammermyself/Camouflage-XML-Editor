@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace TestProject
+namespace CamouflageXmlEditor
 {
     /// <summary>
     /// Interaction logic for App.xaml
