@@ -7,8 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using ColorPickerWPF;
-using ColorPickerWPF.Code;
 
 namespace CamouflageXmlEditor
 {
@@ -73,61 +71,28 @@ namespace CamouflageXmlEditor
                 {
                     dictCurrentsPreviousDefaults[num][1].Fill = new SolidColorBrush(a);
                     dictCurrentsPreviousDefaults[num][0].Fill = new SolidColorBrush(window.picker.Color);
-                    SetSchemeColor(num, window.picker.Color);
+                    Utilities.SetSchemeColor(scheme, num, window.picker.Color);
                 }
             }
             else if (cmd == "previous")
             {
                 dictCurrentsPreviousDefaults[num][0].Fill = dictCurrentsPreviousDefaults[num][1].Fill;
-                SetSchemeColor(num, ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color);
+                Utilities.SetSchemeColor(scheme, num, ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color);
 
             }
             else if (cmd == "default")
             {
                 dictCurrentsPreviousDefaults[num][0].Fill = dictCurrentsPreviousDefaults[num][2].Fill;
-                SetSchemeColor(num, ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color);
+                Utilities.SetSchemeColor(scheme, num, ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color);
             }
-            SetRectangleFillGradient(RectSchemeDisplay,
-                    GetLinearGradientBrush(
+            Utilities.SetRectangleFillGradient(RectSchemeDisplay,
+                    Utilities.GetLinearGradientBrush(
                     ((SolidColorBrush)RectCurrent0.Fill).Color,
                     ((SolidColorBrush)RectCurrent1.Fill).Color,
                     ((SolidColorBrush)RectCurrent2.Fill).Color,
                     ((SolidColorBrush)RectCurrent3.Fill).Color
                     ));
         }
-
-        private void SetSchemeColor(string num, Color color)
-        {
-            switch (num)
-            {
-                case "0":
-                    {
-                        scheme.Black = color;
-                        break;
-                    }
-                case "1":
-                    {
-                        scheme.Red = color;
-                        break;
-                    }
-                case "2":
-                    {
-                        scheme.Green = color;
-                        break;
-                    }
-                case "3":
-                    {
-                        scheme.Blue = color;
-                        break;
-                    }
-                case "ui":
-                    {
-                        scheme.Ui = color;
-                        break;
-                    }
-            }
-        }
-
         private void RegisterButtonEvents()
         {
             colorGrids.ForEach(cg =>
@@ -153,6 +118,7 @@ namespace CamouflageXmlEditor
                 loader = new Loader();
                 if (loader.Load(ofd.FileName))
                 {
+                    ClearAll();
                     ships = new Ships(loader.ShipGroup);
                     camos = new Camouflages(loader.Camouflage, loader.ShipGroup);
                     schemes = new Schemes(loader.ColorScheme);
@@ -169,44 +135,23 @@ namespace CamouflageXmlEditor
             }
         }
 
-        private void EnableGrid(bool en, Grid grid = null, List<Grid> grids = null)
-        {
-            if (grid != null)
-            {
-                grid.IsEnabled = en;
-            }
-            else
-            {
-                if (grids != null)
-                {
-                    grids.ForEach(g => g.IsEnabled = en);
-                }
-            }
-        }
-
-        private void SetRectanglesFill(List<Rectangle> rectangles, Color color)
-        {
-            rectangles.ForEach(r => r.Fill = new SolidColorBrush(color));
-        }
-
-        private void SetRectangleFillColor(Rectangle rectangle, Color color)
-        {
-            rectangle.Fill = new SolidColorBrush(color);
-        }
-
-        private void SetRectangleFillGradient(Rectangle rectangle, LinearGradientBrush lgb)
-        {
-            rectangle.Fill = lgb;
-        }
-
         private void SaveCamouflageFile(object sender, RoutedEventArgs e)
         {
-            
+            var sfd = new SaveFileDialog
+            {
+                Filter = "camouflages | *.xml",
+                FileName = "camouflages.xml"
+            };
+            if (sfd.ShowDialog() == true)
+            {
+                loader.Save(sfd.FileName);
+                MessageBox.Show("File saved.", "File saved.", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void CloseProgram(object sender, RoutedEventArgs e)
         {
-
+            Application.Current.Shutdown();
         }
 
         private void UpdateCbShips()
@@ -220,7 +165,7 @@ namespace CamouflageXmlEditor
             var selectedItem = (string)((ComboBox)sender).SelectedItem;
             if (selectedItem != null)
             {
-                SetRectanglesFill(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList(), Color.FromArgb(0, 0, 0, 0));
+                Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList(), Color.FromArgb(0, 0, 0, 0));
                 Binding listBinding = new Binding() { Source = camos.AssociatedWith(selectedItem) };
                 CbCamouflage.DisplayMemberPath = "Value";
                 CbCamouflage.SelectedValuePath = "Key";
@@ -236,14 +181,14 @@ namespace CamouflageXmlEditor
                 var kvp = (KeyValuePair<int, string>)((ComboBox)sender).SelectedItem;
                 if (!camos.AssociatedColorScheme(kvp.Key).Any())
                 {
-                    EnableGrid(false, grids: colorGrids);
+                    Utilities.EnableGrid(false, colorGrids);
                     CbScheme.ItemsSource = null;
                     CbScheme.IsEnabled = false;
                     ClearColors();
                 }
                 else
                 {
-                    EnableGrid(true, grids: colorGrids);
+                    Utilities.EnableGrid(true, colorGrids);
                     CbScheme.ItemsSource = camos.AssociatedColorScheme(kvp.Key);
                     CbScheme.SelectedIndex = 0;
                     CbScheme.IsEnabled = true;
@@ -257,30 +202,22 @@ namespace CamouflageXmlEditor
             var selectedItem = (string)((ComboBox)sender).SelectedItem;
             if (selectedItem != null)
             {
-                SetRectanglesFill(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList(), Color.FromArgb(0, 0, 0, 0));
                 scheme = schemes.GetScheme(selectedItem);
-                SetRectangleFillGradient(RectSchemeDisplay,
-                    GetLinearGradientBrush(scheme.Black, scheme.Red, scheme.Green, scheme.Blue));
-                SetRectangleFillColor(RectCurrent0, scheme.Black);
-                SetRectangleFillColor(RectCurrent1, scheme.Red);
-                SetRectangleFillColor(RectCurrent2, scheme.Green);
-                SetRectangleFillColor(RectCurrent3, scheme.Blue);
-                SetRectangleFillColor(RectDefault0, scheme.DefaultBlack);
-                SetRectangleFillColor(RectDefault1, scheme.DefaultRed);
-                SetRectangleFillColor(RectDefault2, scheme.DefaultGreen);
-                SetRectangleFillColor(RectDefault3, scheme.DefaultBlue);
-            }
-            if (scheme.Ui != Color.FromArgb(0, 0, 0, 0))
-            {
-                SetRectangleFillColor(RectCurrentUi, scheme.Ui);
-                SetRectangleFillColor(RectDefaultUi, scheme.DefaultUi);
-                EnableGrid(true, grid: GridColorUi);
-            }
-            else
-            {
-                SetRectangleFillColor(RectCurrentUi, Color.FromArgb(0, 0, 0, 0));
-                SetRectangleFillColor(RectDefaultUi, Color.FromArgb(0, 0, 0, 0));
-                EnableGrid(false, grid: GridColorUi);
+                Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList(), Color.FromArgb(0, 0, 0, 0));
+                Utilities.SetRectangleFillGradient(RectSchemeDisplay,
+                    Utilities.GetLinearGradientBrush(scheme.Black, scheme.Red, scheme.Green, scheme.Blue));
+                Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[0]).ToArray(), scheme.AllColors);
+                Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[2]).ToArray(), scheme.AllDefaultColors);
+                if (scheme.Ui != Color.FromArgb(0, 0, 0, 0))
+                {
+                    Utilities.EnableGrid(true, GridColorUi);
+                }
+                else
+                {
+                    Utilities.SetRectangleFillColor(RectCurrentUi, Color.FromArgb(0, 0, 0, 0));
+                    Utilities.SetRectangleFillColor(RectDefaultUi, Color.FromArgb(0, 0, 0, 0));
+                    Utilities.EnableGrid(false, GridColorUi);
+                }
             }
         }
 
@@ -289,11 +226,11 @@ namespace CamouflageXmlEditor
             var c = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[0]).ToList();
             var p = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList();
             var d = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[2]).ToList();
-            SetRectanglesFill(c, Color.FromArgb(0, 0, 0, 0));
-            SetRectanglesFill(p, Color.FromArgb(0, 0, 0, 0));
-            SetRectanglesFill(d, Color.FromArgb(0, 0, 0, 0));
-            SetRectangleFillGradient(RectSchemeDisplay,
-            GetLinearGradientBrush(
+            Utilities.SetRectangleFillColor(c, Color.FromArgb(0, 0, 0, 0));
+            Utilities.SetRectangleFillColor(p, Color.FromArgb(0, 0, 0, 0));
+            Utilities.SetRectangleFillColor(d, Color.FromArgb(0, 0, 0, 0));
+            Utilities.SetRectangleFillGradient(RectSchemeDisplay,
+            Utilities.GetLinearGradientBrush(
                 Color.FromArgb(0, 0, 0, 0),
                 Color.FromArgb(0, 0, 0, 0),
                 Color.FromArgb(0, 0, 0, 0),
@@ -307,30 +244,6 @@ namespace CamouflageXmlEditor
             LbTexture.ItemsSource = null;
             ClearColors();
             EnableTabGrids(false);
-        }
-
-        private LinearGradientBrush GetLinearGradientBrush(Color color0, Color color1, Color color2, Color color3)
-        {
-            var gsc = new GradientStopCollection
-            {
-                new GradientStop(color0, 0.25),
-                new GradientStop(color1, 0.25),
-                new GradientStop(color1, 0.50),
-                new GradientStop(color2, 0.50),
-                new GradientStop(color2, 0.75),
-                new GradientStop(color3, 0.75)
-            };
-            return new LinearGradientBrush
-            {
-                StartPoint = new Point(0, 0),
-                EndPoint = new Point(0, 1),
-                GradientStops = gsc
-            };
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

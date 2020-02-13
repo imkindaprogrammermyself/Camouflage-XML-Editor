@@ -42,6 +42,11 @@ namespace CamouflageXmlEditor
             }
         }
 
+        public void Save(string filename)
+        {
+            doc.Save(filename);
+        }
+
         public XmlNodeList ShipGroup
         {
             get => doc.SelectNodes("/data/ShipGroups/shipGroup");

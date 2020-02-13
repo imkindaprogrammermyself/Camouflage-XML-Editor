@@ -119,6 +119,14 @@ namespace CamouflageXmlEditor
             get => GetColor("colorUI");
             set { ModifyColor("colorUI", value); }
         }
+        public Color[] AllColors
+        {
+            get => new Color[] { Black, Red, Green, Blue, Ui };
+        }
+        public Color[] AllDefaultColors
+        {
+            get => new Color[] { DefaultBlack, DefaultRed, DefaultGreen, DefaultBlue, DefaultUi };
+        }
 
         public Color DefaultBlack { get; }
         public Color DefaultRed { get; }
