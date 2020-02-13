@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,6 +30,7 @@ namespace CamouflageXmlEditor
             InitializeControlLists();
             EnableTabGrids(false);
             RegisterButtonEvents();
+            RegisterSourceChangeEvent();
         }
 
         private void InitializeControlLists()
@@ -55,6 +57,23 @@ namespace CamouflageXmlEditor
                 { "3", new Rectangle[]{RectCurrent3,RectPrevious3,RectDefault3} },
                 { "ui", new Rectangle[]{RectCurrentUi,RectPreviousUi,RectDefaultUi} }
             };
+        }
+
+        private void AutoSelectZero(object sender, EventArgs e)
+        {
+            var s = (ComboBox)sender;
+            s.SelectedIndex = 0;
+        }
+
+        private void RegisterSourceChangeEvent()
+        {
+            var dpd = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(ComboBox));
+            if (dpd != null)
+            {
+                dpd.AddValueChanged(CbShip, AutoSelectZero);
+                dpd.AddValueChanged(CbCamouflage, AutoSelectZero);
+                dpd.AddValueChanged(CbScheme, AutoSelectZero);
+            }
         }
 
         private void ButtonEventHandler(object sender, RoutedEventArgs e)
@@ -123,7 +142,7 @@ namespace CamouflageXmlEditor
                     camos = new Camouflages(loader.Camouflage, loader.ShipGroup);
                     schemes = new Schemes(loader.ColorScheme);
                     EnableTabGrids(true);
-                    UpdateCbShips();
+                    CbShip.ItemsSource = ships.Names;
                     miSave.IsEnabled = true;
                 }
                 else
@@ -154,12 +173,6 @@ namespace CamouflageXmlEditor
             Application.Current.Shutdown();
         }
 
-        private void UpdateCbShips()
-        {
-            CbShip.ItemsSource = ships.Names;
-            CbShip.SelectedIndex = 0;
-        }
-
         private void CbShip_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedItem = (string)((ComboBox)sender).SelectedItem;
@@ -170,7 +183,6 @@ namespace CamouflageXmlEditor
                 CbCamouflage.DisplayMemberPath = "Value";
                 CbCamouflage.SelectedValuePath = "Key";
                 CbCamouflage.SetBinding(ItemsControl.ItemsSourceProperty, listBinding);
-                CbCamouflage.SelectedIndex = 0;
             }
         }
 
@@ -190,7 +202,6 @@ namespace CamouflageXmlEditor
                 {
                     Utilities.EnableGrid(true, colorGrids);
                     CbScheme.ItemsSource = camos.AssociatedColorScheme(kvp.Key);
-                    CbScheme.SelectedIndex = 0;
                     CbScheme.IsEnabled = true;
                 }
                 LbTexture.ItemsSource = camos.AssociatedTextures(kvp.Key);
@@ -208,14 +219,14 @@ namespace CamouflageXmlEditor
                     Utilities.GetLinearGradientBrush(scheme.Black, scheme.Red, scheme.Green, scheme.Blue));
                 Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[0]).ToArray(), scheme.AllColors);
                 Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[2]).ToArray(), scheme.AllDefaultColors);
-                if (scheme.Ui != Color.FromArgb(0, 0, 0, 0))
+                if (scheme.Ui != Utilities.Transparent)
                 {
                     Utilities.EnableGrid(true, GridColorUi);
                 }
                 else
                 {
-                    Utilities.SetRectangleFillColor(RectCurrentUi, Color.FromArgb(0, 0, 0, 0));
-                    Utilities.SetRectangleFillColor(RectDefaultUi, Color.FromArgb(0, 0, 0, 0));
+                    Utilities.SetRectangleFillColor(RectCurrentUi, Utilities.Transparent);
+                    Utilities.SetRectangleFillColor(RectDefaultUi, Utilities.Transparent);
                     Utilities.EnableGrid(false, GridColorUi);
                 }
             }
@@ -223,19 +234,13 @@ namespace CamouflageXmlEditor
 
         private void ClearColors()
         {
-            var c = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[0]).ToList();
-            var p = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList();
-            var d = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[2]).ToList();
-            Utilities.SetRectangleFillColor(c, Color.FromArgb(0, 0, 0, 0));
-            Utilities.SetRectangleFillColor(p, Color.FromArgb(0, 0, 0, 0));
-            Utilities.SetRectangleFillColor(d, Color.FromArgb(0, 0, 0, 0));
-            Utilities.SetRectangleFillGradient(RectSchemeDisplay,
-            Utilities.GetLinearGradientBrush(
-                Color.FromArgb(0, 0, 0, 0),
-                Color.FromArgb(0, 0, 0, 0),
-                Color.FromArgb(0, 0, 0, 0),
-                Color.FromArgb(0, 0, 0, 0)
-                ));
+            var c = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[0])
+                .Concat(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]))
+                .Concat(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[2]))
+                .ToList();
+            
+            Utilities.SetRectangleFillColor(c, Utilities.Transparent);
+            Utilities.SetRectangleFillGradient(RectSchemeDisplay, Utilities.ClearLinearGradientBrush);
         }
 
         private void ClearAll()
