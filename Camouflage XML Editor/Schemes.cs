@@ -39,10 +39,16 @@ namespace CamouflageXmlEditor
             return null;
         }
 
+        public Dictionary<int, ColorScheme> GetAssociatedSchemeKeyed(List<string> acs)
+        {
+            return Scheme.Where(x => acs.Exists(y => y == x.Value.Name)).ToDictionary(x => x.Key, x => x.Value);
+        }
+
         public Dictionary<int, ColorScheme> Scheme
         {
             get;
         }
+
     }
 
     class ColorScheme

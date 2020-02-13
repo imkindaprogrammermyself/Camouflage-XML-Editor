@@ -134,10 +134,10 @@ namespace CamouflageXmlEditor
             };
             if (ofd.ShowDialog() == true)
             {
+                ClearAll();
                 loader = new Loader();
                 if (loader.Load(ofd.FileName))
                 {
-                    ClearAll();
                     ships = new Ships(loader.ShipGroup);
                     camos = new Camouflages(loader.Camouflage, loader.ShipGroup);
                     schemes = new Schemes(loader.ColorScheme);
@@ -148,7 +148,6 @@ namespace CamouflageXmlEditor
                 else
                 {
                     MessageBox.Show("Invalid xml file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    ClearAll();
                     miSave.IsEnabled = false;
                 }
             }
@@ -163,8 +162,16 @@ namespace CamouflageXmlEditor
             };
             if (sfd.ShowDialog() == true)
             {
-                loader.Save(sfd.FileName);
-                MessageBox.Show("File saved.", "File saved.", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                if (loader.Save(sfd.FileName))
+                {
+                    MessageBox.Show("File saved.", "File saved.", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Error saving the file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                
             }
         }
 
@@ -180,7 +187,7 @@ namespace CamouflageXmlEditor
             {
                 Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList(), Color.FromArgb(0, 0, 0, 0));
                 Binding listBinding = new Binding() { Source = camos.AssociatedWith(selectedItem) };
-                CbCamouflage.DisplayMemberPath = "Value";
+                CbCamouflage.DisplayMemberPath = "Value.Name";
                 CbCamouflage.SelectedValuePath = "Key";
                 CbCamouflage.SetBinding(ItemsControl.ItemsSourceProperty, listBinding);
             }
@@ -190,8 +197,8 @@ namespace CamouflageXmlEditor
         {
             if (((ComboBox)sender).SelectedItem != null)
             {
-                var kvp = (KeyValuePair<int, string>)((ComboBox)sender).SelectedItem;
-                if (!camos.AssociatedColorScheme(kvp.Key).Any())
+                var kvp = (KeyValuePair<int, Camouflage>)((ComboBox)sender).SelectedItem;
+                if (!camos.HasColorScheme(kvp.Key))
                 {
                     Utilities.EnableGrid(false, colorGrids);
                     CbScheme.ItemsSource = null;
@@ -201,7 +208,11 @@ namespace CamouflageXmlEditor
                 else
                 {
                     Utilities.EnableGrid(true, colorGrids);
-                    CbScheme.ItemsSource = camos.AssociatedColorScheme(kvp.Key);
+                    var s = schemes.GetAssociatedSchemeKeyed(camos.AssociatedColorScheme(kvp.Key));
+                    var listBinding = new Binding() { Source = s };
+                    CbScheme.DisplayMemberPath = "Value.Name";
+                    CbScheme.SelectedValuePath = "Key";
+                    CbScheme.SetBinding(ItemsControl.ItemsSourceProperty, listBinding);
                     CbScheme.IsEnabled = true;
                 }
                 LbTexture.ItemsSource = camos.AssociatedTextures(kvp.Key);
@@ -210,10 +221,10 @@ namespace CamouflageXmlEditor
 
         private void CbScheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedItem = (string)((ComboBox)sender).SelectedItem;
+            var selectedItem = ((ComboBox)sender).SelectedItem;
             if (selectedItem != null)
             {
-                scheme = schemes.GetScheme(selectedItem);
+                scheme = ((KeyValuePair<int, ColorScheme>)((ComboBox)sender).SelectedItem).Value;
                 Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList(), Color.FromArgb(0, 0, 0, 0));
                 Utilities.SetRectangleFillGradient(RectSchemeDisplay,
                     Utilities.GetLinearGradientBrush(scheme.Black, scheme.Red, scheme.Green, scheme.Blue));
@@ -249,6 +260,12 @@ namespace CamouflageXmlEditor
             LbTexture.ItemsSource = null;
             ClearColors();
             EnableTabGrids(false);
+        }
+
+        private void About_Click(object sender, RoutedEventArgs e)
+        {
+            About about = new About();
+            about.ShowDialog();
         }
     }
 }

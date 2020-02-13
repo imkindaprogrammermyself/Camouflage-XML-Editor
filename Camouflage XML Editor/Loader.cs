@@ -42,9 +42,17 @@ namespace CamouflageXmlEditor
             }
         }
 
-        public void Save(string filename)
+        public bool Save(string filename)
         {
-            doc.Save(filename);
+            try
+            {
+                doc.Save(filename);
+                return true;
+            }
+            catch (XmlException)
+            {
+                return false;
+            }
         }
 
         public XmlNodeList ShipGroup

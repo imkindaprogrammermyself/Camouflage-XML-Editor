@@ -22,11 +22,7 @@ namespace CamouflageXmlEditor
 
         public bool HasColorScheme(int hash)
         {
-            if (hashedCamouflages[hash].ColorSchemes.Count > 0)
-            {
-                return true;
-            }
-            return false;
+            return hashedCamouflages[hash].ColorSchemes.Any();
         }
 
         public List<string> AssociatedColorScheme(int hash)
@@ -47,20 +43,19 @@ namespace CamouflageXmlEditor
             return new List<string>();
         }
 
-        public Dictionary<int, string> AssociatedWith(string ship)
+        public Dictionary<int, Camouflage> AssociatedWith(string ship)
         {
-            var hashedCamo = new Dictionary<int, string>();
+            var hashedCamo = new Dictionary<int, Camouflage>();
             foreach (var camo in hashedCamouflages)
             {
-                var x = camo.Value.Tiled;
                 var sim = camo.Value.ShipGroups.Intersect(ships.GroupsOf(ship)).ToList();
                 if (sim.Count > 0)
                 {
-                    hashedCamo.Add(camo.Key, camo.Value.Name);
+                    hashedCamo.Add(camo.Key, camo.Value);
                 }
                 if (camo.Value.TargetShips.Exists(s => s == ship))
                 {
-                    hashedCamo.Add(camo.Key, camo.Value.Name);
+                    hashedCamo.Add(camo.Key, camo.Value);
                 }
             }
             return hashedCamo;

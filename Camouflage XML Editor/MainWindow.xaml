@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CamouflageXmlEditor"
         xmlns:ColorPickerWPF="clr-namespace:ColorPickerWPF;assembly=ColorPickerWPF" x:Class="CamouflageXmlEditor.MainWindow"
         mc:Ignorable="d"
-        Title="Camouflage Color Scheme Editor" Height="331.667" MinHeight="331.667" Width="628.3" MinWidth="628.3" FontSize="14" Icon="out.png">
+        Title="Camouflage Color Scheme Editor" Height="331.667" MinHeight="331.667" Width="628.3" MinWidth="628.3" FontSize="14" Icon="appicon.png">
     <Window.Resources>
         <Style x:Key="TransparentGridBackground" TargetType="{x:Type Grid}">
             <Setter Property="Background">
@@ -74,7 +74,7 @@
                 <MenuItem Header="Exit" Click="CloseProgram"/>
             </MenuItem>
             <MenuItem Header="Help" HorizontalAlignment="Left">
-                <MenuItem Header="About"/>
+                <MenuItem x:Name="About" Header="About" Click="About_Click"/>
             </MenuItem>
         </Menu>
         <TabControl x:Name="tabControlMenu" DockPanel.Dock="Top">
