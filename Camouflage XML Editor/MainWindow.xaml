@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CamouflageXmlEditor"
-        xmlns:ColorPickerWPF="clr-namespace:ColorPickerWPF;assembly=ColorPickerWPF" x:Class="CamouflageXmlEditor.MainWindow"
+        x:Class="CamouflageXmlEditor.MainWindow"
         mc:Ignorable="d"
         Title="Camouflage Color Scheme Editor" Height="331.667" MinHeight="331.667" Width="628.3" MinWidth="628.3" FontSize="14" Icon="appicon.png">
     <Window.Resources>
