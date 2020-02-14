@@ -101,15 +101,16 @@ namespace CamouflageXmlEditor
             if (ofd.ShowDialog() == true)
             {
                 ClearAll();
+                tabControlMenu.SelectedIndex = 0;
                 loader = new Loader();
                 if (loader.Load(ofd.FileName))
                 {
                     ships = new Ships(loader.ShipGroup);
                     camos = new Camouflages(loader.Camouflage, loader.ShipGroup);
                     schemes = new Schemes(loader.ColorScheme);
-                    EnableTabGrids(true);
                     CbShip.ItemsSource = ships.Names;
                     miSave.IsEnabled = true;
+                    EnableTabGrids(true);
                 }
                 else
                 {
