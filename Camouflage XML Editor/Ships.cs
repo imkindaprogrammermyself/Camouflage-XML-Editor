@@ -23,18 +23,6 @@ namespace CamouflageXmlEditor
             return shipGroups.Where(x => x.Value.Exists(y => y == shipName)).Select(z => z.Key).ToList();
         }
 
-        public List<string> ShipsOf(string groupName)
-        {
-            if (shipGroups[groupName] != null)
-            {
-                return shipGroups[groupName];
-            }
-            else
-            {
-                return new List<string>();
-            }
-        }
-
         private List<string> Split(XmlNode group)
         {
             return group["ships"].InnerText.Split(' ')
@@ -50,11 +38,6 @@ namespace CamouflageXmlEditor
                 y.Sort();
                 return y;
             }
-        }
-
-        public List<string> Groups
-        {
-            get => shipGroups.Select(x => x.Key).ToList();
         }
     }
 }

@@ -25,24 +25,6 @@ namespace CamouflageXmlEditor
             return hashedCamouflages[hash].ColorSchemes.Any();
         }
 
-        public List<string> AssociatedColorScheme(int hash)
-        {
-            if (hashedCamouflages.ContainsKey(hash))
-            {
-                return hashedCamouflages[hash].ColorSchemes;
-            }
-            return new List<string>();
-        }
-
-        public List<string> AssociatedTextures(int hash)
-        {
-            if (hashedCamouflages.ContainsKey(hash))
-            {
-                return hashedCamouflages[hash].Textures;
-            }
-            return new List<string>();
-        }
-
         public Dictionary<int, Camouflage> AssociatedWith(string ship)
         {
             var hashedCamo = new Dictionary<int, Camouflage>();
@@ -78,21 +60,6 @@ namespace CamouflageXmlEditor
         public string Name
         {
             get => camouflage["name"].InnerText;
-        }
-
-        private void FilterPaths(ref List<string> a, string b)
-        {
-            if (!string.IsNullOrWhiteSpace(b))
-            {
-                if (b.Trim().Contains('\\'))
-                {
-                    a.Add(b.Trim().Split('\\').Last());
-                }
-                else
-                {
-                    a.Add(b.Trim().Split('/').Last());
-                }
-            }
         }
 
         public List<string> ShipGroups
@@ -170,6 +137,21 @@ namespace CamouflageXmlEditor
                 }
                 usedTextures = usedTextures.Distinct().ToList();
                 return usedTextures;
+            }
+        }
+
+        private void FilterPaths(ref List<string> a, string b)
+        {
+            if (!string.IsNullOrWhiteSpace(b))
+            {
+                if (b.Trim().Contains('\\'))
+                {
+                    a.Add(b.Trim().Split('\\').Last());
+                }
+                else
+                {
+                    a.Add(b.Trim().Split('/').Last());
+                }
             }
         }
     }

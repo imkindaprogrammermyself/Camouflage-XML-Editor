@@ -24,6 +24,7 @@ namespace CamouflageXmlEditor
         private List<Grid> colorGrids;
         private List<ComboBox> cbs;
         private Dictionary<string, Rectangle[]> dictCurrentsPreviousDefaults;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -51,11 +52,11 @@ namespace CamouflageXmlEditor
             };
             dictCurrentsPreviousDefaults = new Dictionary<string, Rectangle[]>
             {
-                { "0", new Rectangle[]{RectCurrent0,RectPrevious0,RectDefault0} },
-                { "1", new Rectangle[]{RectCurrent1,RectPrevious1,RectDefault1} },
-                { "2", new Rectangle[]{RectCurrent2,RectPrevious2,RectDefault2} },
-                { "3", new Rectangle[]{RectCurrent3,RectPrevious3,RectDefault3} },
-                { "ui", new Rectangle[]{RectCurrentUi,RectPreviousUi,RectDefaultUi} }
+                { "0", new Rectangle[]{RectCurrent0, RectPrevious0, RectDefault0} },
+                { "1", new Rectangle[]{RectCurrent1, RectPrevious1, RectDefault1} },
+                { "2", new Rectangle[]{RectCurrent2, RectPrevious2, RectDefault2} },
+                { "3", new Rectangle[]{RectCurrent3, RectPrevious3, RectDefault3} },
+                { "ui", new Rectangle[]{RectCurrentUi, RectPreviousUi, RectDefaultUi} }
             };
         }
 
@@ -76,42 +77,7 @@ namespace CamouflageXmlEditor
             }
         }
 
-        private void ButtonEventHandler(object sender, RoutedEventArgs e)
-        {
-            string[] tag = ((Button)sender).Tag.ToString().Split('_');
-            string cmd = tag[0];
-            string num = tag[1];
-            if (cmd == "current")
-            {
-                var a = ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color;
-                ColorPickerWindow window = new ColorPickerWindow();
-                window.picker.SetColor(a);
-                if (window.ShowDialog() == true)
-                {
-                    dictCurrentsPreviousDefaults[num][1].Fill = new SolidColorBrush(a);
-                    dictCurrentsPreviousDefaults[num][0].Fill = new SolidColorBrush(window.picker.Color);
-                    Utilities.SetSchemeColor(scheme, num, window.picker.Color);
-                }
-            }
-            else if (cmd == "previous")
-            {
-                dictCurrentsPreviousDefaults[num][0].Fill = dictCurrentsPreviousDefaults[num][1].Fill;
-                Utilities.SetSchemeColor(scheme, num, ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color);
 
-            }
-            else if (cmd == "default")
-            {
-                dictCurrentsPreviousDefaults[num][0].Fill = dictCurrentsPreviousDefaults[num][2].Fill;
-                Utilities.SetSchemeColor(scheme, num, ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color);
-            }
-            Utilities.SetRectangleFillGradient(RectSchemeDisplay,
-                    Utilities.GetLinearGradientBrush(
-                    ((SolidColorBrush)RectCurrent0.Fill).Color,
-                    ((SolidColorBrush)RectCurrent1.Fill).Color,
-                    ((SolidColorBrush)RectCurrent2.Fill).Color,
-                    ((SolidColorBrush)RectCurrent3.Fill).Color
-                    ));
-        }
         private void RegisterButtonEvents()
         {
             colorGrids.ForEach(cg =>
@@ -171,7 +137,7 @@ namespace CamouflageXmlEditor
                 {
                     MessageBox.Show("Error saving the file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                
+
             }
         }
 
@@ -208,14 +174,13 @@ namespace CamouflageXmlEditor
                 else
                 {
                     Utilities.EnableGrid(true, colorGrids);
-                    var s = schemes.GetAssociatedSchemeKeyed(camos.AssociatedColorScheme(kvp.Key));
-                    var listBinding = new Binding() { Source = s };
+                    var listBinding = new Binding() { Source = schemes.GetAssociatedSchemeKeyed(kvp.Value.ColorSchemes) };
                     CbScheme.DisplayMemberPath = "Value.Name";
                     CbScheme.SelectedValuePath = "Key";
                     CbScheme.SetBinding(ItemsControl.ItemsSourceProperty, listBinding);
                     CbScheme.IsEnabled = true;
                 }
-                LbTexture.ItemsSource = camos.AssociatedTextures(kvp.Key);
+                LbTexture.ItemsSource = kvp.Value.Textures;
             }
         }
 
@@ -226,8 +191,7 @@ namespace CamouflageXmlEditor
             {
                 scheme = ((KeyValuePair<int, ColorScheme>)((ComboBox)sender).SelectedItem).Value;
                 Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]).ToList(), Color.FromArgb(0, 0, 0, 0));
-                Utilities.SetRectangleFillGradient(RectSchemeDisplay,
-                    Utilities.GetLinearGradientBrush(scheme.Black, scheme.Red, scheme.Green, scheme.Blue));
+                Utilities.SetRectangleFillGradient(RectSchemeDisplay, Utilities.GetLinearGradientBrush(scheme.Black, scheme.Red, scheme.Green, scheme.Blue));
                 Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[0]).ToArray(), scheme.AllColors);
                 Utilities.SetRectangleFillColor(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[2]).ToArray(), scheme.AllDefaultColors);
                 if (scheme.Ui != Utilities.Transparent)
@@ -243,13 +207,50 @@ namespace CamouflageXmlEditor
             }
         }
 
+        private void ButtonEventHandler(object sender, RoutedEventArgs e)
+        {
+            string[] tag = ((Button)sender).Tag.ToString().Split('_');
+            string cmd = tag[0];
+            string num = tag[1];
+            if (cmd == "current")
+            {
+                var a = ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color;
+                ColorPickerWindow window = new ColorPickerWindow();
+                window.picker.SetColor(a);
+                if (window.ShowDialog() == true)
+                {
+                    dictCurrentsPreviousDefaults[num][1].Fill = new SolidColorBrush(a);
+                    dictCurrentsPreviousDefaults[num][0].Fill = new SolidColorBrush(window.picker.Color);
+                    Utilities.SetSchemeColor(scheme, num, window.picker.Color);
+                }
+            }
+            else if (cmd == "previous")
+            {
+                dictCurrentsPreviousDefaults[num][0].Fill = dictCurrentsPreviousDefaults[num][1].Fill;
+                Utilities.SetSchemeColor(scheme, num, ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color);
+
+            }
+            else if (cmd == "default")
+            {
+                dictCurrentsPreviousDefaults[num][0].Fill = dictCurrentsPreviousDefaults[num][2].Fill;
+                Utilities.SetSchemeColor(scheme, num, ((SolidColorBrush)dictCurrentsPreviousDefaults[num][0].Fill).Color);
+            }
+            Utilities.SetRectangleFillGradient(RectSchemeDisplay,
+                    Utilities.GetLinearGradientBrush(
+                    ((SolidColorBrush)RectCurrent0.Fill).Color,
+                    ((SolidColorBrush)RectCurrent1.Fill).Color,
+                    ((SolidColorBrush)RectCurrent2.Fill).Color,
+                    ((SolidColorBrush)RectCurrent3.Fill).Color
+                    ));
+        }
+
         private void ClearColors()
         {
             var c = dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[0])
                 .Concat(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[1]))
                 .Concat(dictCurrentsPreviousDefaults.Select(kvp => kvp.Value[2]))
                 .ToList();
-            
+
             Utilities.SetRectangleFillColor(c, Utilities.Transparent);
             Utilities.SetRectangleFillGradient(RectSchemeDisplay, Utilities.ClearLinearGradientBrush);
         }

@@ -8,62 +8,28 @@
         mc:Ignorable="d"
         Title="Camouflage Color Scheme Editor" Height="331.667" MinHeight="331.667" Width="628.3" MinWidth="628.3" FontSize="14" Icon="appicon.png">
     <Window.Resources>
-        <Style x:Key="TransparentGridBackground" TargetType="{x:Type Grid}">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <DrawingBrush Viewport="0,0,16,16" ViewportUnits="Absolute" Stretch="None" TileMode="Tile">
-                        <DrawingBrush.Drawing>
-                            <DrawingGroup>
-                                <GeometryDrawing Brush="#ffcccccc">
-                                    <GeometryDrawing.Geometry>
-                                        <GeometryGroup>
-                                            <RectangleGeometry Rect="0,0,8,8"/>
-                                            <RectangleGeometry Rect="8,8,8,8"/>
-                                        </GeometryGroup>
-                                    </GeometryDrawing.Geometry>
-                                </GeometryDrawing>
-                                <GeometryDrawing Brush="White">
-                                    <GeometryDrawing.Geometry>
-                                        <GeometryGroup>
-                                            <RectangleGeometry Rect="8,0,8,8"/>
-                                            <RectangleGeometry Rect="0,8,8,8"/>
-                                        </GeometryGroup>
-                                    </GeometryDrawing.Geometry>
-                                </GeometryDrawing>
-                            </DrawingGroup>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="RectBackground" TargetType="{x:Type Rectangle}">
-            <Setter Property="Fill">
-                <Setter.Value>
-                    <DrawingBrush Viewport="0,0,16,16" ViewportUnits="Absolute" Stretch="None" TileMode="Tile">
-                        <DrawingBrush.Drawing>
-                            <DrawingGroup>
-                                <GeometryDrawing Brush="#ffcccccc">
-                                    <GeometryDrawing.Geometry>
-                                        <GeometryGroup>
-                                            <RectangleGeometry Rect="0,0,8,8"/>
-                                            <RectangleGeometry Rect="8,8,8,8"/>
-                                        </GeometryGroup>
-                                    </GeometryDrawing.Geometry>
-                                </GeometryDrawing>
-                                <GeometryDrawing Brush="White">
-                                    <GeometryDrawing.Geometry>
-                                        <GeometryGroup>
-                                            <RectangleGeometry Rect="8,0,8,8"/>
-                                            <RectangleGeometry Rect="0,8,8,8"/>
-                                        </GeometryGroup>
-                                    </GeometryDrawing.Geometry>
-                                </GeometryDrawing>
-                            </DrawingGroup>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <DrawingBrush x:Key="GridBackground" Viewport="0,0,16,16" ViewportUnits="Absolute" Stretch="None" TileMode="Tile">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#ffcccccc">
+                        <GeometryDrawing.Geometry>
+                            <GeometryGroup>
+                                <RectangleGeometry Rect="0,0,8,8"/>
+                                <RectangleGeometry Rect="8,8,8,8"/>
+                            </GeometryGroup>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="White">
+                        <GeometryDrawing.Geometry>
+                            <GeometryGroup>
+                                <RectangleGeometry Rect="8,0,8,8"/>
+                                <RectangleGeometry Rect="0,8,8,8"/>
+                            </GeometryGroup>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
     </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top" FontSize="14" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}">
@@ -99,7 +65,7 @@
                     <ComboBox Name="CbCamouflage" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" SelectionChanged="CbCamouflage_SelectionChanged"/>
                     <ComboBox Name="CbScheme" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" SelectionChanged="CbScheme_SelectionChanged"/>
                     <ListBox Name="LbTexture" Grid.Column="1" Grid.Row="3"/>
-                    <Rectangle Grid.Column="2" Grid.RowSpan="4" Style="{StaticResource ResourceKey=RectBackground}" Margin="5,0,0,0"/>
+                    <Rectangle Grid.Column="2" Grid.RowSpan="4" Fill="{StaticResource GridBackground}" Margin="5,0,0,0"/>
                     <Rectangle Name="RectSchemeDisplay" Grid.Column="2" Grid.RowSpan="4" Margin="5,0,0,0"/>
                 </Grid>
             </TabItem>
@@ -116,9 +82,9 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Rectangle Grid.Column="1" Grid.Row="0" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
-                    <Rectangle Grid.Column="1" Grid.Row="1" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
-                    <Rectangle Grid.Column="1" Grid.Row="2" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="0" Fill="{StaticResource GridBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="1" Fill="{StaticResource GridBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="2" Fill="{StaticResource GridBackground}" Margin="5"/>
                     <Label Grid.Column="0" Grid.Row="0" Content="Current Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
                     <Label Grid.Column="0" Grid.Row="1" Content="Previous Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
                     <Label Grid.Column="0" Grid.Row="2" Content="Default Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
@@ -143,9 +109,9 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Rectangle Grid.Column="1" Grid.Row="0" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
-                    <Rectangle Grid.Column="1" Grid.Row="1" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
-                    <Rectangle Grid.Column="1" Grid.Row="3" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="0" Fill="{StaticResource GridBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="1" Fill="{StaticResource GridBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="3" Fill="{StaticResource GridBackground}" Margin="5"/>
                     <Label Grid.Column="0" Grid.Row="0" Content="Current Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
                     <Label Grid.Column="0" Grid.Row="1" Content="Previous Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
                     <Label Grid.Column="0" Grid.Row="2" Content="Default Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
@@ -170,9 +136,9 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Rectangle Grid.Column="1" Grid.Row="0" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
-                    <Rectangle Grid.Column="1" Grid.Row="1" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
-                    <Rectangle Grid.Column="1" Grid.Row="2" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="0" Fill="{StaticResource GridBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="1" Fill="{StaticResource GridBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="2" Fill="{StaticResource GridBackground}" Margin="5"/>
                     <Label Grid.Column="0" Grid.Row="0" Content="Current Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
                     <Label Grid.Column="0" Grid.Row="1" Content="Previous Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
                     <Label Grid.Column="0" Grid.Row="2" Content="Default Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
@@ -197,9 +163,9 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Rectangle Grid.Column="1" Grid.Row="0" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
-                    <Rectangle Grid.Column="1" Grid.Row="1" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
-                    <Rectangle Grid.Column="1" Grid.Row="2" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="0" Fill="{StaticResource GridBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="1" Fill="{StaticResource GridBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="2" Fill="{StaticResource GridBackground}" Margin="5"/>
                     <Label Grid.Column="0" Grid.Row="0" Content="Current Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
                     <Label Grid.Column="0" Grid.Row="1" Content="Previous Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
                     <Label Grid.Column="0" Grid.Row="2" Content="Default Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
@@ -224,9 +190,9 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Rectangle Grid.Column="1" Grid.Row="0" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
-                    <Rectangle Grid.Column="1" Grid.Row="1" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
-                    <Rectangle Grid.Column="1" Grid.Row="2" Style="{StaticResource ResourceKey=RectBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="0" Fill="{StaticResource GridBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="1" Fill="{StaticResource GridBackground}" Margin="5"/>
+                    <Rectangle Grid.Column="1" Grid.Row="2" Fill="{StaticResource GridBackground}" Margin="5"/>
                     <Label Grid.Column="0" Grid.Row="0" Content="Current Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
                     <Label Grid.Column="0" Grid.Row="1" Content="Previous Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
                     <Label Grid.Column="0" Grid.Row="2" Content="Default Color:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>

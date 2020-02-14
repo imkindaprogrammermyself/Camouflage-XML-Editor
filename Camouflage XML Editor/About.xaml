@@ -8,7 +8,7 @@
         Title="About" WindowStyle="None" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <StackPanel>
         <Image Height="100" Margin="10" Source="appicon.png"/>
-        <TextBlock TextWrapping="Wrap" Text="Camouflage XML Editor 1.0 by notyourfahter" HorizontalAlignment="Center" Margin="18,10,17,10" FontSize="16"/>
-        <Button x:Name="BtnOkAbout" Content="OK" Margin="0,0,0,10" Click="BtnOkAbout_Click_1" HorizontalAlignment="Center" Padding="10,5"/>
+        <TextBlock TextWrapping="Wrap" Text="Camouflage XML Editor 1.0 by notyourfather" HorizontalAlignment="Center" Margin="18,10,17,10" FontSize="16"/>
+        <Button x:Name="BtnOkAbout" Content="OK" Margin="0,0,0,10" Click="BtnOkAbout_Click_1" HorizontalAlignment="Center" Padding="20,5"/>
     </StackPanel>
 </Window>

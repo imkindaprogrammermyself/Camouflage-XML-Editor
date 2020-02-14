@@ -27,18 +27,6 @@ namespace CamouflageXmlEditor
             }
         }
 
-        public ColorScheme GetScheme(string name)
-        {
-            foreach (KeyValuePair<int, ColorScheme> kvp in Scheme)
-            {
-                if (kvp.Value.Name == name)
-                {
-                    return kvp.Value;
-                }
-            }
-            return null;
-        }
-
         public Dictionary<int, ColorScheme> GetAssociatedSchemeKeyed(List<string> acs)
         {
             return Scheme.Where(x => acs.Exists(y => y == x.Value.Name)).ToDictionary(x => x.Key, x => x.Value);
