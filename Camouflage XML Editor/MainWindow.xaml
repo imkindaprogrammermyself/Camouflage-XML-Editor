@@ -34,8 +34,8 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top" FontSize="14" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}">
             <MenuItem Header="File" HorizontalAlignment="Left">
-                <MenuItem Header="Open" Click="OpenCamouflageFile"/>
-                <MenuItem x:Name="miSave" Header="Save" Click="SaveCamouflageFile" IsEnabled="False"/>
+                <MenuItem Header="Open XML" Click="OpenCamouflageFile"/>
+                <MenuItem x:Name="miSave" Header="Save XML" Click="SaveCamouflageFile" IsEnabled="False"/>
                 <Separator/>
                 <MenuItem Header="Exit" Click="CloseProgram"/>
             </MenuItem>
